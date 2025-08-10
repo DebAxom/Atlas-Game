@@ -1,0 +1,30 @@
+<body params="{id, name, star, photo}">
+    <div class="main" n:style="f-row squircle" data-lives="{star}" data-id="{id}">
+        <!-- <img src="{photo}" alt=""> -->
+        <h3>{name}</h3>
+        <span>{star}</span>
+    </div>
+</body>
+<style>
+    .main{
+        padding: 1rem;
+        margin: 0.5rem 0rem;
+        width: 100%;
+        background-color: white;
+        box-shadow: 0px 1px 6px 0px rgba(0,0,0,0.75);
+    }
+    h3{
+        font-weight: 500;
+    }
+    span{
+        margin-left: auto;
+    }
+    img{
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+</style>
+<script pre-render>
+    const color = {1:'red', 2: 'yellow', 3: 'white'}[Number(star)];
+</script>

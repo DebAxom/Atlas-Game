@@ -1,0 +1,54 @@
+<body props="{user,room}">
+    <div class="container">
+        <div class="main" n:style="squircle f-row" on:gamestart="gameStarted()">
+            <p id="msg">Game has not started yet !</p>
+            <button id="btn-start" style="background-color: rgb(0, 162, 0);" n:style="squircle" onclick="window.gameFuncs.get('start')()">Start</button>
+            <button id="btn-end" style="background-color: red;" n:style="squircle" onclick="window.gameFuncs.get('stop')()">End</button>
+        </div>
+    </div>
+</body>
+<style>
+    .container {
+        width: 100%;
+        height: 7rem;
+        padding: 1rem;
+        padding-bottom: 0rem;
+        background-color: transparent;
+    }
+
+    .main {
+        margin-top: 1rem;
+        padding: 0.5rem;
+        width: 100%;
+        height: 4.5rem;
+        box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.75);
+    }
+
+    button {
+        border: none;
+        display: none;
+        padding: 1rem;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-left: auto;
+    }
+
+    p {
+        height: 100%;
+        vertical-align: middle;
+        padding: 1rem;
+        letter-spacing: 1px;
+    }
+</style>
+<script defer>
+    if(user===room.split('.')[1]){
+        document.getElementById('btn-start').style.display = 'block';
+    }
+</script>
+<script>
+    function gameStarted(){
+        document.getElementById('btn-start').style.display = 'none';
+        document.getElementById('btn-end').style.display = 'block';
+    }
+</script>

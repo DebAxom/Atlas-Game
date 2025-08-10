@@ -1,0 +1,7 @@
+client/node_modules/
+server/node_modules/
+client/assets
+client/src/firebase.js
+build/
+places/
+server.txt

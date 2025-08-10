@@ -1,0 +1,57 @@
+<style>
+    .container {
+        width: 100vw;
+        height: 5rem;
+        background-color: white;
+        box-shadow: 2px 2px 12px 0px rgba(0, 0, 0, 0.75);
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        position: fixed;
+    }
+
+    h1,span {
+        vertical-align: middle;
+        color: black;
+        text-align: center;
+        display: inline-block;
+    }
+
+    img{
+        height: 36px;
+        width: 36px;
+        border-radius: 50%;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <a n:route="/"><h1>Atlas</h1></a>
+        </div>
+        <div>
+            <a n:route="/auth"><img src="{AccountSVG}" alt="No Image" id="img"></a>
+        </div>
+    </div>
+</body>
+<script>
+    import AccountSVG from 'images/account.svg';
+    import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+    const @loggedIn = false;
+
+    export { @loggedIn };
+</script>
+<script defer>
+    const auth = getAuth(window.fireApp);
+    onAuthStateChanged(auth, user => {
+        if(user){
+            @loggedIn = true;
+            document.getElementById('img').src = user.photoURL;
+        }else{
+            @loggedIn = false;
+            document.getElementById('img').src = AccountSVG;
+        }
+    });
+</script>

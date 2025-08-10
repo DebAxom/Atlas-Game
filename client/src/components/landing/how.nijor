@@ -1,0 +1,32 @@
+<body>
+    <div>
+        <h2>How to Play ?</h2>
+        <ul>
+            <li>(1) Get a random letter, name a place starting with it.</li>
+            <li>(2) The next player uses the last letter of your word.</li>
+            <li>(3) 15 seconds per turn, 3 lives each — lose all, you're out.</li>
+            <li>(4) Last player standing wins!</li>
+        </ul>
+    </div>
+</body>
+<style>
+    div {
+        max-width: 800px;
+        margin-top: 2rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    h2 {
+        margin-bottom: 1rem;
+    }
+
+    ul {
+        list-style: none;
+        text-align: left;
+        font-size: 1.6rem;
+        line-height: 1.8rem;
+    }
+</style>

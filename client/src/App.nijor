@@ -1,0 +1,5 @@
+<header n:imported="components/header.nijor">
+<body>
+    <header></header>
+    <div n:slot n:style="full center f-col" style="margin-top: 5rem;"></div>
+</body>

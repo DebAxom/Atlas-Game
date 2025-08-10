@@ -1,0 +1,166 @@
+<player n:imported="components/room/player.nijor" />
+<status n:imported="components/room/status.nijor" />
+<places n:imported="components/room/places.nijor" />
+<typing n:imported="components/room/typing.nijor" />
+
+<body params={id}>
+    <div n:style="f-row full">
+
+        <div class="sidebar" n:style="f-col">
+
+            <div class="players" n:style="squircle">
+                <h3 n:style="squircle">Players</h3>
+                <div n:for="player in playersList" n:reload="players">
+                    <player name="{player.name}" star="{player.lives}" id="{player.id}" photo="{player.photo}"></player>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="main" n:style="f-col">
+            <status user="{hashedID}" room="{id}"></status>
+            <places></places>
+            <typing></typing>
+        </div>
+
+    </div>
+</body>
+<style>
+    .sidebar {
+        width: 20%;
+        background-color: transparent;
+        padding: 1rem;
+    }
+
+    .players {
+        margin-top: 0.5rem;
+        padding: 1rem;
+        height: calc(100% - 1.5rem);
+        background-color: rgb(235, 233, 233);
+        box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.75);
+        border-radius: 10px;
+    }
+
+    .main {
+        width: 80%;
+    }
+
+    h3 {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.75);
+        background-color: white;
+        letter-spacing: 1px;
+        font-weight: 600;
+        color: black;
+    }
+</style>
+<script>
+    import { reload, dispatchEvent } from "nijor";
+    import { io } from "script/socket.js";
+    import { getCurrentUser } from "script/user.js";
+    import hash from "script/encrypt.js";
+
+    let playersList = [];
+
+    function disableInput(msg){
+        document.getElementById('input-place').style.display='none';
+        document.getElementById('input-button').style.display='none';
+        document.getElementById('input-text').style.display='block';
+        document.getElementById('input-text').innerHTML = msg;
+    }
+
+    function writeMsg(msg){
+        document.getElementById('msg').innerHTML = msg;
+    }
+
+</script>
+
+<script pre-render>
+    const user = await getCurrentUser();
+    if (!user) {
+        return window.nijor.redirect(`/auth?redirect=${id}`); 
+    }
+    const hashedID = hash(user.email.split('@')[0]);
+    const userName = user.displayName;
+    
+    const socket = io();
+    
+    socket.on("connect", () => {
+        playersList.push({ name: user.displayName, id: hashedID, lives: 3, photo: user.photoURL});
+        reload('players');
+
+        socket.emit('join-room', {
+            room: id,
+            id: hashedID,
+            name: userName,
+            photo: user.photoURL
+        });
+
+    });
+
+    socket.on('update-players', players => {
+        playersList = players;
+        reload('players');
+    });
+
+    socket.on('turn-update',data=>{
+        document.getElementById('input-place').value = "";
+        if(hashedID===data.player.id){
+            document.getElementById('input-place').disabled = false;
+            writeMsg(`Your turn ; Letter is ${data.letter}`);
+        }else{
+            document.getElementById('input-place').disabled = true;
+            writeMsg(`${data.player.name}'s turn ; Letter is ${data.letter}`);
+        }
+    });
+
+    socket.on('game-over', winner=>{
+
+        if(winner===null) return;
+
+        disableInput('Game has ended !');
+
+        if(hashedID===winner.id){
+            writeMsg(`Congratulations ${winner.name} ! You Won !`);
+        }else{
+            writeMsg(`${winner.name} Won !`);
+        }
+    });
+
+    socket.on('game-stopped', host=>{
+        writeMsg('Game Ended !');
+        if (hashedID!==host) disableInput('Game has been ended by host !');
+        else disableInput('You ended the game !');
+    });
+
+    socket.on('msg', data =>{
+
+        if(hashedID === id.split('.')[1] && data.code===1) dispatchEvent('gamestart');
+
+        if(data.to=='*'){
+            writeMsg(data.msg);
+            return;
+        }
+
+        if(hashedID===data.to) writeMsg(data.msg);
+    });
+
+    socket.on('update-places', places=> dispatchEvent('newplace',places) );
+
+    socket.on('player-inactive', data=>{
+        const msgMap = {0: 'You lost all your lives !', 1: 'Game already started ! You can observe but not participate.'};
+        if(hashedID === data.id) disableInput(msgMap[data.code]);
+    });
+
+    window.gameFuncs = new Map();
+
+    window.gameFuncs.set('start',()=> socket.emit('start-game', id));
+    window.gameFuncs.set('stop',()=> socket.emit('stop-game', id));
+
+    window.gameFuncs.set('submit-place',()=>{
+        const input = document.getElementById('input-place');
+        socket.emit('submit-place',{ place : input.value.trim().toLowerCase(), roomId : id });
+    });
+
+</script>

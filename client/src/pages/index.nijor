@@ -1,0 +1,9 @@
+<how n:imported="components/landing/how.nijor" />
+<links n:imported="components/landing/links.nijor" />
+
+<body>
+    <div style="height: 80%;" n:style="f-col">
+        <links></links>
+        <how></how>
+    </div>
+</body>

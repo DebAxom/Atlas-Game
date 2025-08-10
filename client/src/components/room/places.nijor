@@ -1,0 +1,39 @@
+<body>
+    <div n:for="name in usedNames" n:reload="used-names" on:newplace="ReloadPlaces($data)">
+        <span n:style="squircle">{name}</span>
+    </div>
+</body>
+<style>
+    div{
+        width: 100%;
+        padding: 1rem;
+        max-height: calc(100% - 14rem);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow-x: hidden;
+        overflow-y: auto;
+        gap: 1rem;
+    }
+    span{
+        padding: 1rem;
+        margin: 0.5rem;
+        height: fit-content;
+        width: fit-content;
+        flex-shrink: 0;
+        flex-grow: 0;
+        box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
+        cursor: default;
+    }
+</style>
+<script>
+    import { reload } from 'nijor';
+
+    let usedNames = ['Assam'];
+    
+    function ReloadPlaces(places){
+        usedNames = places.map(place => place.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+        reload('used-names');
+    }
+
+</script>

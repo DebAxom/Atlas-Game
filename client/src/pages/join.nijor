@@ -1,0 +1,59 @@
+<body>
+    <div class="main" n:style="f-col full">
+        <div class="container" n:style="f-col center">
+            <h2>Join Game Room</h2>
+            <div n:style="f-col" style="width: 300px; margin-top: 3rem;">
+                <input type="text" placeholder="Room Id" n:ref="@id" style="margin-bottom: 1rem;"/>
+                <button on:click="Join()">Join</button>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    .main{
+        padding: 0.5rem;
+    }
+
+    .container{
+        margin-top: 10rem;
+        width: 100%;
+        padding: 2rem;
+    }
+
+    h2{
+        text-align: center;
+        font-size: 2.4rem;
+        font-weight: 500;
+    }
+
+    input{
+        padding: 1rem;
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    button{
+        padding: 1rem;
+        font-size: 1.6rem;
+        border: none;
+        background-color: rgb(39, 154, 255);
+        color: white;
+    }
+</style>
+
+<script pre-render>
+    if(!(await getCurrentUser())){
+        window.nijor.redirect(`/auth`);
+    }
+</script>
+
+<script>
+
+    import {getCurrentUser} from 'script/user.js';
+
+    const @id = '';
+
+    function Join(){
+        window.nijor.redirect(`/room/${@id}`);
+    }
+</script>

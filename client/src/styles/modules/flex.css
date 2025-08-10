@@ -1,0 +1,31 @@
+.f-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.f-col{
+    display: flex;
+    flex-direction: column;
+}
+
+.jus-center{
+    justify-content: center;
+}
+
+.align-center{
+    align-items: center;
+}
+
+.self-center{
+    align-self: center;
+}
+
+.center{
+    justify-content: center;
+    align-items: center;
+}
+
+.full{
+    height: 100%;
+    width: 100%;
+}
